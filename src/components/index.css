@@ -1,0 +1,76 @@
+/**
+ * Cesar Guerrero
+ * 08/25/23
+ * This serves as the global CSS template for our entire website.
+ */
+
+
+ /**** Universal CSS ****/
+ .cg-button-container{
+    padding: 5% 0%;
+ }
+ 
+ .cg-button.btn{
+    margin: 20px auto;
+    display: block;
+    background-color: #2196f3;
+    border-radius: 10px;
+    width:50%;
+ }
+ 
+ .cg-image{
+    width:25%;
+ }
+ 
+ 
+  /*CSS for Login page*/
+ .cg-login-body{
+    padding-top: 50px;
+    padding-bottom: 50px;
+    background-color: #2196f3;
+    background: linear-gradient(135deg, #B72C7B 25%,  #1044A5, #620E5A 75%);
+    background-size: cover;
+ }
+ 
+ .cg-login-box{
+    padding:5% 0%;
+    background-color: #ffffff;
+    border-radius: 25px;
+ }
+ 
+ .cg-login-title{
+    font-weight:bolder;
+ }
+ 
+ 
+ /*CSS for Callback Page*/
+ .cg-callback-body{
+    color:white;
+    background-color: #2196f3;
+    background: linear-gradient(135deg, #B72C7B 25%,  #1044A5, #620E5A 75%);
+    background-size: cover;
+    padding-top: 50px;
+    padding-bottom: 50px;
+ }
+ 
+ 
+ /*CSS for the Error Page*/
+ .cg-error-body{
+    padding-top: 50px;
+    padding-bottom: 50px;
+    background-color: #e5e2e2;
+ }
+ 
+ .cg-error-box{
+    padding:15px;
+    background-color: white;
+    border-radius: 10px;
+ }
+ 
+ .cg-colorful-writing{
+    font-size:10rem;
+    background: linear-gradient(to right, #B72C7B 40%,  #1044A5, #620E5A 60%);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+ }
+ 
