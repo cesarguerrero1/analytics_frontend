@@ -55,7 +55,7 @@ function Login(): JSX.Element{
         }
         //We need to immediately have the backend load up our oauth tokens so the user can then click on the Sign in
         dispatch(loadOAuthThunk());
-    }, [dispatch, navigate, currentUser, oauthReady])
+    }, [dispatch, navigate, currentUser])
 
     return(
         <div className="container-fluid min-vh-100 min-vh-100 cg-login-body ">
