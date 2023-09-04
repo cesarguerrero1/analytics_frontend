@@ -70,7 +70,9 @@ const userSlice = createSlice({
         //Complete the authorization
         builder.addCase(authorizeOAuthThunk.fulfilled, (state,action) => {
             console.log(action.payload)
+            console.log("REDUCER")
             state.authorizationApproved = authorizationStatus.APPROVED ? action.payload['oauth_approved'] === true : authorizationStatus.REJECTED
+            console.log(state.authorizationApproved);
             if(state.authorizationApproved === authorizationStatus.APPROVED){
                 state.currentUser = action.payload['current_user']
                 state.authorizationStatusMessage = 'APPROVED'
