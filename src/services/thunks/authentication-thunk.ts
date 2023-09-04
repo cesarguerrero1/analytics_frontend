@@ -31,8 +31,6 @@ const loadOAuthThunk = createAsyncThunk('users/oauthleg1', async () => {
  */
 const authorizeOAuthThunk = createAsyncThunk('users/oauthleg3', async ({oauthToken, oauthVerifier}:{oauthToken:String | null, oauthVerifier:String | null}) => {
     const responseObject = await authService.authorizeOAuth(oauthToken, oauthVerifier);
-    console.log(responseObject)
-    console.log("THUNK")
     return responseObject
 })
 
@@ -43,6 +41,5 @@ const logoutThunk = createAsyncThunk('users/logout', async () => {
     const responseObject = await authService.logout();
     return responseObject
 })
-
 
 export {isLoggedInThunk, loadOAuthThunk, authorizeOAuthThunk, logoutThunk}
