@@ -46,26 +46,37 @@ const userSlice = createSlice({
             state.currentUser = null
         })
 
+
+
         //Ensure that the OAuth Flow is ready to go
         builder.addCase(loadOAuthThunk.fulfilled, (state,action) => {
             state.oauthReady = action.payload['oauth_ready'];
-            state.oauthToken = action.payload['oauth_token'];
-            state.authorizationApproved = authorizationStatus.PENDING;
-            state.authorizationStatusMessage = '...';
+            if(state.oauthReady === true){
+                state.oauthToken = action.payload['oauth_token'];
+                state.authorizationApproved = authorizationStatus.PENDING;
+                state.authorizationStatusMessage = 'PENDING';
+            }
         })
 
         builder.addCase(loadOAuthThunk.rejected, (state,action) => {
             state.oauthReady = false;
             state.oauthToken = null;
             state.authorizationApproved = authorizationStatus.PENDING;
-            state.authorizationStatusMessage = 'PENDING';
+            state.authorizationStatusMessage = '...';
         })
+
+
 
         //Complete the authorization
         builder.addCase(authorizeOAuthThunk.fulfilled, (state,action) => {
-            state.currentUser = action.payload['current_user']
             state.authorizationApproved = authorizationStatus.APPROVED ? action.payload['oauth_approved'] === true : authorizationStatus.REJECTED
-            state.authorizationStatusMessage = 'APPROVED' ? state.authorizationApproved === authorizationStatus.APPROVED : 'REJECTED'
+            if(state.authorizationApproved === authorizationStatus.APPROVED){
+                state.currentUser = action.payload['current_user']
+                state.authorizationStatusMessage = 'APPROVED'
+            }else{
+                state.currentUser = null
+                state.authorizationStatusMessage = 'REJECTED'
+            }
         })
 
         builder.addCase(authorizeOAuthThunk.pending, (state,action) => {
@@ -81,6 +92,8 @@ const userSlice = createSlice({
 
         })
         
+
+
         //Log the user out
         builder.addCase(logoutThunk.fulfilled, (state,action) => {
             state.currentUser = null

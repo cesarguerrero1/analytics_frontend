@@ -20,25 +20,29 @@ function Login(): JSX.Element{
     let socialMediaApps: any[] = [
     {
         "name": "Twitter",
-        "imageSrc": "/images/TwitterX_Logo.png",
+        "active":true,
+        "imageSrc": "/images/twitterx_logo.jpeg",
         "oauthlink": `https://api.twitter.com/oauth/authorize?oauth_token=${oauthToken}`,
         "background-color": "black"
     },
     {
         "name": "Instagram",
-        "imageSrc": "/images/Instagram_Logo.png",
+        "active":false,
+        "imageSrc": "/images/instagram_logo.jpeg",
         "oauthlink": ``,
-        "background-color": "#B72C7B"
+        "background-color": "#813db2"
     },
     {
         "name": "Pinterest",
-        "imageSrc": "/images/Pinterest_Logo.png",
+        "active":false,
+        "imageSrc": "/images/pinterest_logo.jpeg",
         "oauthlink": ``,
         "background-color": "red"
     },
     {
         "name": "Tiktok",
-        "imageSrc": "/images/Tiktok_Logo.png",
+        "active":false,
+        "imageSrc": "/images/tiktok_logo.jpeg",
         "oauthlink": ``,
         "background-color": "black"
     }]
@@ -51,7 +55,7 @@ function Login(): JSX.Element{
         }
         //We need to immediately have the backend load up our oauth tokens so the user can then click on the Sign in
         dispatch(loadOAuthThunk());
-    }, [dispatch, navigate, currentUser])
+    }, [dispatch, navigate, currentUser, oauthReady])
 
     return(
         <div className="container-fluid min-vh-100 min-vh-100 cg-login-body ">
@@ -63,13 +67,17 @@ function Login(): JSX.Element{
                     <div className="cg-button-container">
                         {oauthReady ?
                             socialMediaApps.map((app) => {
-                                return <a key={app['name']} href={app["oauthlink"]} target="_blank" rel="noreferrer" className = "btn cg-button" style={{backgroundColor:app['background-color']}}><img alt="Company Logo" src={app['imageSrc']} className="cg-image"/></a>
+                                if(app['active'] === true){
+                                    return <a key={app['name']} href={app["oauthlink"]} target="_blank" rel="noreferrer" className = "btn cg-button" style={{backgroundColor:app['background-color']}}><img alt="Company Logo" src={app['imageSrc']} className="cg-image"/></a>
+                                }
+                                return null
                             })
                             : <h3 className="text-center">Loading...</h3>
                         }
                     </div>
                     <div className="text-center">
                         <h5> A personalized Analytics Dasboard is only a click away!</h5>
+                        <h6>NOTE - All authorization access is <b>strictly read only</b></h6>
                     </div>
                 </div>
             </div>
