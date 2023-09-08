@@ -24,7 +24,7 @@ import Error from "./other/error"
 import "./index.css"
 
 //Store
-import {store} from "../store"
+import {setupStore} from "../store"
 
 /**
  * Our entire website layout is defined here -- Notice the use of Bootstrap
@@ -32,7 +32,7 @@ import {store} from "../store"
  */
 function Analytics(): JSX.Element{
     return(
-        <Provider store={store}>
+        <Provider store={setupStore()}>
             <CheckUser />
             <BrowserRouter>
                         <Routes>

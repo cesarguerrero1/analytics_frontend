@@ -4,7 +4,7 @@
  * @returns JSX Element for our Error page 404
  */
 
-import { useNavigate } from "react-router"; //Allows us to redirect a users browser
+import { useNavigate } from "react-router-dom"; //Allows us to redirect a users browser
 
 function Error(): JSX.Element{
 

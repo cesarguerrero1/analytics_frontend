@@ -6,22 +6,24 @@
  */
 
 
-import { configureStore } from "@reduxjs/toolkit"
-
+import { combineReducers, configureStore, PreloadedState} from "@reduxjs/toolkit"
 //Reducers
 import usersReducer from "./reducers/users-reducer"
 
-//Creating Store -- We need this to be in a function for testing
-export const createStore = () => configureStore({
-    reducer:{
-        users:usersReducer
-    }
+//Create rootReducer to obtain state type
+const rootReducer = combineReducers({
+    users:usersReducer,
 })
 
-//Create our store
-export const store = createStore();
+//Store creation function
+export function setupStore(preloadedState?: PreloadedState<RootState>){
+    return configureStore({
+        reducer: rootReducer,
+        preloadedState
+    })
+}
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>
-// Inferred type: {users: usersReducer, Etc.}
-export type AppDispatch = typeof store.dispatch
+//Ensuring Typescript is happy
+export type RootState = ReturnType<typeof rootReducer>
+export type AppStore = ReturnType<typeof setupStore>
+export type AppDispatch = AppStore['dispatch']

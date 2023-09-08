@@ -40,7 +40,6 @@ async function loadOAuth() {
  */
 async function authorizeOAuth(oauthToken:String | null, oauthVerifier:String | null){
     const response = await api.get(`${BASE_URL}/callback?oauth_token=${oauthToken}&oauth_verifier=${oauthVerifier}`)
-    console.log(response.data)
     return response.data
 }
 

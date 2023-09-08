@@ -52,6 +52,27 @@
     padding-top: 50px;
     padding-bottom: 50px;
  }
+
+
+
+ /*CSS for the Dashboard*/
+ .cg-dashboard-body{
+   background-color: #2196f3;
+   background: linear-gradient(135deg, #B72C7B 25%,  #1044A5, #620E5A 75%);
+   background-size: cover;
+   padding-top: 50px;
+   padding-bottom: 50px;
+ }
+
+ .cg-left-side{
+   color:black;
+   background-color: blue;
+ }
+
+ .cg-right-side{
+   color:black;
+   background-color: red;
+ }
  
  
  /*CSS for the Error Page*/

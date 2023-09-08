@@ -7,8 +7,7 @@
 
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../hooks";
-import { useNavigate } from "react-router";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams} from "react-router-dom";
 
 //Thunk Imports
 import { authorizeOAuthThunk } from "../../services/thunks/authentication-thunk";

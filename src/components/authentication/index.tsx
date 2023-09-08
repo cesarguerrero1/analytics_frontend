@@ -7,7 +7,7 @@
 
 //Import State Tools
 import { useEffect } from "react"; //Allow us to perform an action AFTER render and after any update
-import { useAppDispatch, useAppSelector } from "../../hooks"; //Allows us to update state
+import { useAppDispatch } from "../../hooks"; //Allows us to update state
 
 //We will need to call our Thunk
 import { isLoggedInThunk } from "../../services/thunks/authentication-thunk";
@@ -17,14 +17,13 @@ import { isLoggedInThunk } from "../../services/thunks/authentication-thunk";
  * @returns JSX.Element
  */
 function CheckUser(): JSX.Element{
-    const { currentUser } = useAppSelector(state => state.users);
     const dispatch = useAppDispatch();
     
 
     //After rendering of the page, immediately check if a session exists
     useEffect( () =>{
         dispatch(isLoggedInThunk());
-    }, [dispatch, currentUser])
+    }, [dispatch])
     
     return(<></>);
 }

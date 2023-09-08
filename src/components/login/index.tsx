@@ -6,7 +6,7 @@
 
 import { useEffect } from "react"; //Allow us to perform an action AFTER render and after any update
 import { useAppDispatch, useAppSelector } from "../../hooks"; //Allows us to update state
-import { useNavigate } from "react-router"; //Allows us to redirect a users browser
+import { useNavigate } from "react-router-dom"; //Allows us to redirect a users browser
 
 //Thunks
 import {loadOAuthThunk} from "../../services/thunks/authentication-thunk"
@@ -68,7 +68,11 @@ function Login(): JSX.Element{
                         {oauthReady ?
                             socialMediaApps.map((app) => {
                                 if(app['active'] === true){
-                                    return <a key={app['name']} href={app["oauthlink"]} target="_blank" rel="noreferrer" className = "btn cg-button" style={{backgroundColor:app['background-color']}}><img alt="Company Logo" src={app['imageSrc']} className="cg-image"/></a>
+                                    return(
+                                        <a key={app['name']} href={app["oauthlink"]} target="_blank" rel="noreferrer" className = "btn cg-button" style={{backgroundColor:app['background-color']}}>
+                                            <img alt={app['name']} src={app['imageSrc']} className="cg-image"/>
+                                        </a>
+                                    )
                                 }
                                 return null
                             })
