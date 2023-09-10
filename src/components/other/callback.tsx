@@ -34,38 +34,46 @@ function Callback(): JSX.Element{
 
 
     useEffect(() => {
-        //We don't want people on this page if they are logged in or they have authorized our application
+        //If we have approved the authorization token then go to the dashboard
         if(authorizationApproved === authorizationStatus.APPROVED){
             setTimeout(() => {
                 navigate('/dashboard')
             }, 3000)
-            return
-        }
-
-        if(authorizationApproved === authorizationStatus.REJECTED){
+            
+        }else if(authorizationApproved === authorizationStatus.REJECTED || denied !== null){
+            //If we denied authorization OR it was rejected then go to the login page to reset everything and try again
             setTimeout(() => {
                 navigate('/login')
             }, 3000)
         }
 
-        //We did not find a denied param in the url so attempt to authorize the credentials
-        if(denied === null && thunkCalled === false){
+        //We should only attempt to authorize credentials IFF there is no 'denied' query param and we have not REJECTED the authorization
+        if(denied === null && thunkCalled === false && authorizationApproved === authorizationStatus.PENDING){
             if(oauthToken && oauthVerifier){
                 dispatch(authorizeOAuthThunk({oauthToken, oauthVerifier}))
                 setThunkCalled(true)
             }
-            return
         }
         
-    }, [dispatch, navigate, thunkCalled, denied, oauthToken, oauthVerifier, authorizationApproved])
+    }, [dispatch, navigate, authorizationApproved])
 
     return(
         <div className="container-fluid min-vh-100 min-vh-100 cg-callback-body">
             <div className="row w-75 mx-auto justify-content-center align-items-center">
                 <div className="col text-center">
-                    {denied === null ? <div><h1>Attempting to authorize your account</h1> <h6>Authorization Status: {authorizationStatusMessage}</h6></div> : 
-                        <div><h5>AUTHORIZATION DENIED</h5><h6>Redirecting you back to the login page momentarily</h6></div>}
-                    {authorizationApproved === authorizationStatus.APPROVED && <div><h5>AUTHORIZATION APPROVED</h5>Redirecting you to the dashboard momentarily</div>}
+                    {denied === null ? 
+                        <div>
+                            <h1>Attempting to authorize your account</h1>
+                            <h6>Authorization Status: {authorizationStatusMessage}</h6>
+                            {authorizationApproved === authorizationStatus.APPROVED && <p>Redirecting you to the dashboard momentarily</p>}
+                            {authorizationApproved === authorizationStatus.REJECTED && <p>Redirecting you to the login page momentarily</p>}
+                        </div>
+                        : 
+                        <div>
+                            <h5>AUTHORIZATION DENIED</h5>
+                            <h6>Redirecting you back to the login page momentarily</h6>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

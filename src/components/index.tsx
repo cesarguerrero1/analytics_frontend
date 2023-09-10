@@ -35,13 +35,13 @@ function Analytics(): JSX.Element{
         <Provider store={setupStore()}>
             <CheckUser />
             <BrowserRouter>
-                        <Routes>
-                            <Route index element={<Dashboard/>}/>
-                            <Route path="/dashboard" element={<Dashboard/>}/>
-                            <Route path="/login" element={<Login/>}/>
-                            <Route path="/callback/" element={<Callback/>}/>
-                            <Route path="/*" element={<Error/>}/>
-                        </Routes>
+                <Routes>
+                    <Route index element={<Dashboard/>}/>
+                    <Route path="/dashboard" element={<Dashboard/>}/>
+                    <Route path="/login" element={<Login/>}/>
+                    <Route path="/callback/" element={<Callback/>}/>
+                    <Route path="/*" element={<Error/>}/>
+                </Routes>
             </BrowserRouter>
         </Provider>
     )
