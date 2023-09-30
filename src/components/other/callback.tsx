@@ -7,30 +7,40 @@
 
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../hooks";
-import { useNavigate, useSearchParams} from "react-router-dom";
+import { useNavigate, useSearchParams, useParams} from "react-router-dom";
 
 //Thunk Imports
-import { authorizeOAuthThunk } from "../../services/thunks/authentication-thunk";
+import { authorizeTwitterOAuthThunk } from "../../thunks/twitter-thunk";
+import { authorizeTwitchOAuthThunk } from "../../thunks/twitch-thunk";
 
 //Import ENUM
 import {authorizationStatus} from "../../reducers/users-reducer"
 
 
 function Callback(): JSX.Element{
+
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
     //Global State Variables
-    const {authorizationStatusMessage, authorizationApproved} = useAppSelector(state => state.users)
+    let {authorizationStatusMessage, authorizationApproved} = useAppSelector(state => state.users)
 
     //Local State Variables
     let [thunkCalled, setThunkCalled] = useState(false);
 
-    //Query Keys
+    //Path Keys
+    let {appname} = useParams();
+
+    //We can't access these values as pathnames so we are expecting query paramters
     let [searchParams] = useSearchParams();
+    //Twitter
     const denied = searchParams.get('denied');
     const oauthToken = searchParams.get('oauth_token');
     const oauthVerifier = searchParams.get('oauth_verifier');
 
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
+    //Twitch
+    const code = searchParams.get('code');
+    const error = searchParams.get('error');
 
 
     useEffect(() => {
@@ -40,30 +50,59 @@ function Callback(): JSX.Element{
                 navigate('/dashboard')
             }, 3000)
             
-        }else if(authorizationApproved === authorizationStatus.REJECTED || denied !== null){
+        }else if(authorizationApproved === authorizationStatus.REJECTED){
             //If we denied authorization OR it was rejected then go to the login page to reset everything and try again
             setTimeout(() => {
                 navigate('/login')
             }, 3000)
-        }
+        }else{
+            if(thunkCalled === false){
+                //Attempting to authorize Twitch
+                if(appname === "twitch"){
 
-        //We should only attempt to authorize credentials IFF there is no 'denied' query param and we have not REJECTED the authorization
-        if(denied === null && thunkCalled === false && authorizationApproved === authorizationStatus.PENDING){
-            if(oauthToken && oauthVerifier){
-                dispatch(authorizeOAuthThunk({oauthToken, oauthVerifier}))
-                setThunkCalled(true)
+                    //There is no error query so ping the server
+                    if(error === null){
+                        if(code){
+                            dispatch(authorizeTwitchOAuthThunk(code));
+                            setThunkCalled(true)
+                        }
+                    }else{
+                        setTimeout(() => {
+                            navigate('/login')
+                        }, 3000)
+                    }
+
+                //Attempting to authorize Twitter
+                }else if(appname === "twitter"){
+
+                    //There is no denied query so ping the server
+                    if(denied === null){
+                        if(oauthToken && oauthVerifier){
+                            dispatch(authorizeTwitterOAuthThunk({oauthToken, oauthVerifier}))
+                            setThunkCalled(true)
+                        }
+                    }else{
+                        setTimeout(() => {
+                            navigate('/login')
+                        }, 3000)
+                    }
+                    
+                }
             }
         }
+
         
     }, [dispatch, navigate, authorizationApproved])
 
     return(
         <div className="container-fluid min-vh-100 min-vh-100 cg-callback-body">
-            <div className="row w-75 mx-auto justify-content-center align-items-center">
+            <div className="row mx-auto justify-content-center align-items-center cg-callback-container">
                 <div className="col text-center">
-                    {denied === null ? 
+                {
+                    appname === "twitter" && 
+                    (denied === null ? 
                         <div>
-                            <h1>Attempting to authorize your account</h1>
+                            <h1>Attempting to authorize your Twitter account</h1>
                             <h6>Authorization Status: {authorizationStatusMessage}</h6>
                             {authorizationApproved === authorizationStatus.APPROVED && <p>Redirecting you to the dashboard momentarily</p>}
                             {authorizationApproved === authorizationStatus.REJECTED && <p>Redirecting you to the login page momentarily</p>}
@@ -73,7 +112,24 @@ function Callback(): JSX.Element{
                             <h5>AUTHORIZATION DENIED</h5>
                             <h6>Redirecting you back to the login page momentarily</h6>
                         </div>
-                    }
+                    )
+                }
+                {
+                    appname === "twitch" && 
+                    (error === null ? 
+                        <div>
+                            <h1>Attempting to authorize your Twitch account</h1>
+                            <h6>Authorization Status: {authorizationStatusMessage}</h6>
+                            {authorizationApproved === authorizationStatus.APPROVED && <p>Redirecting you to the dashboard momentarily</p>}
+                            {authorizationApproved === authorizationStatus.REJECTED && <p>Redirecting you to the login page momentarily</p>}
+                        </div>
+                        : 
+                        <div>
+                            <h5>AUTHORIZATION DENIED</h5>
+                            <h6>Redirecting you back to the login page momentarily</h6>
+                        </div>
+                    )
+                }
                 </div>
             </div>
         </div>

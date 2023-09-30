@@ -24,7 +24,14 @@ import Error from "./other/error"
 import "./index.css"
 
 //Store
-import {setupStore} from "../store"
+import { loadState, saveState } from "../local-storage";
+import { setupStore } from "../store"
+
+const persistedState = loadState();
+const store = setupStore(persistedState)
+store.subscribe(() => {
+    saveState(store.getState());
+})
 
 /**
  * Our entire website layout is defined here -- Notice the use of Bootstrap
@@ -32,14 +39,14 @@ import {setupStore} from "../store"
  */
 function Analytics(): JSX.Element{
     return(
-        <Provider store={setupStore()}>
+        <Provider store={store}>
             <CheckUser />
             <BrowserRouter>
                 <Routes>
                     <Route index element={<Dashboard/>}/>
                     <Route path="/dashboard" element={<Dashboard/>}/>
                     <Route path="/login" element={<Login/>}/>
-                    <Route path="/callback/" element={<Callback/>}/>
+                    <Route path="/callback/:appname" element={<Callback/>}/>
                     <Route path="/*" element={<Error/>}/>
                 </Routes>
             </BrowserRouter>

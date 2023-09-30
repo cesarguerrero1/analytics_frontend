@@ -29,7 +29,7 @@ const handlers = [
   //BASE -- A user is authorized
   rest.get(`${BASE_URL}/callback`,
     (request, response, context) => {
-      return response(context.json({"oauth_approved":true, "current_user":"Cesar"}))
+      return response(context.json({"oauth_approved":true, "current_user":"Me"}))
     }
   )
 ]

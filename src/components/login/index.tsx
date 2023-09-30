@@ -4,84 +4,87 @@
  * @returns JSX Element with our login page
  */
 
-import { useEffect } from "react"; //Allow us to perform an action AFTER render and after any update
+import { useEffect, useState } from "react"; //Allow us to perform an action AFTER render and after any update
 import { useAppDispatch, useAppSelector } from "../../hooks"; //Allows us to update state
-import { useNavigate } from "react-router-dom"; //Allows us to redirect a users browser
+import { useNavigate} from "react-router-dom"; //Allows us to redirect a users browser
 
 //Thunks
-import {loadOAuthThunk} from "../../services/thunks/authentication-thunk"
+import { loadTwitchOAuthThunk } from "../../thunks/twitch-thunk";
+import { loadTwitterOAuthThunk } from "../../thunks/twitter-thunk";
 
 function Login(): JSX.Element{
+    //Global State Variables
+    const {loggedIn} = useAppSelector(state => state.users);
+    const {twitterOauthReady, twitterOauthToken} = useAppSelector(state => state.twitter);
+    const {twitchOauthReady, twitchClientID} = useAppSelector(state => state.twitch);
 
-    const {currentUser, oauthReady, oauthToken} = useAppSelector(state => state.users);
+    //Local State Variables
+    let [twitterState, setTwitterState] = useState(false);
+    let [twitchState, setTwitchState] = useState(false);
+    const hostname = window.location.hostname;
+
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
+    //Button Data
     let socialMediaApps: any[] = [
-    {
-        "name": "Twitter",
-        "active":true,
-        "imageSrc": "/images/twitterx_logo.jpeg",
-        "oauthlink": `https://api.twitter.com/oauth/authorize?oauth_token=${oauthToken}`,
-        "background-color": "black"
-    },
-    {
-        "name": "Instagram",
-        "active":false,
-        "imageSrc": "/images/instagram_logo.jpeg",
-        "oauthlink": ``,
-        "background-color": "#813db2"
-    },
-    {
-        "name": "Pinterest",
-        "active":false,
-        "imageSrc": "/images/pinterest_logo.jpeg",
-        "oauthlink": ``,
-        "background-color": "red"
-    },
-    {
-        "name": "Tiktok",
-        "active":false,
-        "imageSrc": "/images/tiktok_logo.jpeg",
-        "oauthlink": ``,
-        "background-color": "black"
-    }]
+        {
+            "name": "Twitter",
+            "active":true,
+            "imageSrc": "/images/twitterx_logo.jpeg",
+            "href": `https://api.twitter.com/oauth/authorize?oauth_token=${twitterOauthToken}`,
+            "background-color": "black"
+        },
+        {
+            "name": "Twitch",
+            "active":true,
+            "imageSrc": "/images/twitch_logo.jpeg",
+            "href": `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${twitchClientID}&redirect_uri=https://${hostname}/callback/twitch&scope=bits%3Aread%20moderator%3Aread%3Afollowers%20channel%3Aread%3Asubscriptions%20user%3Aread%3Aemail`,
+            "background-color": "#6b2497"
+        },
+    ]
     
+    //This will fire on page load and then refire if the variables twitchOauthReady, TwitterOauthReady, or loggedIn change state
     useEffect(() => {
         //If a user is logged in we do not want them on the login page
-        if (currentUser !== null){
+        if (loggedIn === true){
             navigate("/dashboard")
             return
         }
+
         //We need to immediately have the backend load up our oauth tokens so the user can then click on the Sign in
-        dispatch(loadOAuthThunk());
-    }, [dispatch, navigate, currentUser])
+        if(!twitchState){
+            dispatch(loadTwitchOAuthThunk());
+            setTwitchState(true);
+        }
+
+        if(!twitterState){
+            dispatch(loadTwitterOAuthThunk());
+            setTwitterState(true);
+        }
+    }, [dispatch, navigate, loggedIn, twitchOauthReady, twitterOauthReady])
 
     return(
         <div className="container-fluid min-vh-100 min-vh-100 cg-login-body ">
-            <div className="row w-50 mx-auto justify-content-center align-items-center">
+            <div className="row mx-auto justify-content-center align-items-center cg-login-container">
                 <div className="col cg-login-box">
                     <div className="text-center">
                         <h1 className="cg-login-title">ANALYTICS DASHBOARD</h1>
                     </div>
-                    <div className="cg-button-container">
-                        {oauthReady ?
-                            socialMediaApps.map((app) => {
-                                if(app['active'] === true){
-                                    return(
-                                        <a key={app['name']} href={app["oauthlink"]} target="_blank" rel="noreferrer" className = "btn cg-button" style={{backgroundColor:app['background-color']}}>
-                                            <img alt={app['name']} src={app['imageSrc']} className="cg-image"/>
-                                        </a>
-                                    )
-                                }
-                                return null
-                            })
-                            : <h3 className="text-center">Loading...</h3>
-                        }
+                    <div>
+                        {socialMediaApps.map((app) => {
+                            if(app['active'] === true){
+                                return(
+                                    <a key={app['name']} href={app['href']} target="_self" rel="noreferrer" className = "btn cg-button" style={{backgroundColor:app['background-color']}}>
+                                        <img alt={app['name']} src={app['imageSrc']} className="cg-button-image"/>
+                                    </a>
+                                )
+                            }
+                        })}   
                     </div>
                     <div className="text-center">
-                        <h5> A personalized Analytics Dasboard is only a click away!</h5>
-                        <h6>NOTE - All authorization access is <b>strictly read only</b></h6>
+                        <h5>A personalized Analytics Dasboard is only a click away!</h5>
+                        <h6><i>Authorization access is <b>strictly read only</b></i></h6>
                     </div>
                 </div>
             </div>

@@ -7,12 +7,17 @@
 
 
 import { combineReducers, configureStore, PreloadedState} from "@reduxjs/toolkit"
+
 //Reducers
 import usersReducer from "./reducers/users-reducer"
+import twitterReducer from "./reducers/twitter-reducer"
+import twitchReducer from "./reducers/twitch-reducer"
 
 //Create rootReducer to obtain state type
 const rootReducer = combineReducers({
     users:usersReducer,
+    twitter:twitterReducer,
+    twitch:twitchReducer,
 })
 
 //Store creation function

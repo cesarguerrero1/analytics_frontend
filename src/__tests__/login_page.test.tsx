@@ -83,7 +83,7 @@ describe("Checking login functionality for Login Page", () => {
   test('If the user is logged in we should be redirected', async () =>{
     server.use(
       rest.get(`${BASE_URL}/profile`, (request, response, context) => {
-        return response(context.json({"is_logged_in":true, "current_user":"Cesar"}))
+        return response(context.json({"is_logged_in":true, "current_user":"Me"}))
       })
     )
 
