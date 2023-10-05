@@ -53,7 +53,7 @@ function TwitchDashboard(): JSX.Element{
 
     useEffect(() => {
         collectData();
-    }, [])
+    }, [collectData])
 
 
     return(

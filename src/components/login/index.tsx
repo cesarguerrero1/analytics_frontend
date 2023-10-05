@@ -79,6 +79,8 @@ function Login(): JSX.Element{
                                         <img alt={app['name']} src={app['imageSrc']} className="cg-button-image"/>
                                     </a>
                                 )
+                            }else{
+                                return(<></>)
                             }
                         })}
                     </div>

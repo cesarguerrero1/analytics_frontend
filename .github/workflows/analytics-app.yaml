@@ -10,6 +10,8 @@ on:
     branches: [ "main", "develop"]
 
 jobs:
+  env:
+    CI: false
   build:
 
     runs-on: ubuntu-latest
