@@ -87,6 +87,8 @@ function Callback(): JSX.Element{
                         }, 3000)
                     }
                     
+                }else{
+                    navigate('/error')
                 }
             }
         }
@@ -109,7 +111,7 @@ function Callback(): JSX.Element{
                         </div>
                         : 
                         <div>
-                            <h5>AUTHORIZATION DENIED</h5>
+                            <h5>You have DENIED our authorization attempt</h5>
                             <h6>Redirecting you back to the login page momentarily</h6>
                         </div>
                     )
@@ -125,7 +127,7 @@ function Callback(): JSX.Element{
                         </div>
                         : 
                         <div>
-                            <h5>AUTHORIZATION DENIED</h5>
+                            <h5>You have DENIED our authorization attempt</h5>
                             <h6>Redirecting you back to the login page momentarily</h6>
                         </div>
                     )

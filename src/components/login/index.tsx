@@ -30,14 +30,14 @@ function Login(): JSX.Element{
     let socialMediaApps: any[] = [
         {
             "name": "Twitter",
-            "active":true,
+            "active": twitterOauthReady,
             "imageSrc": "/images/twitterx_logo.jpeg",
             "href": `https://api.twitter.com/oauth/authorize?oauth_token=${twitterOauthToken}`,
             "background-color": "black"
         },
         {
             "name": "Twitch",
-            "active":true,
+            "active": twitchOauthReady,
             "imageSrc": "/images/twitch_logo.jpeg",
             "href": `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${twitchClientID}&redirect_uri=https://${hostname}/callback/twitch&scope=bits%3Aread%20moderator%3Aread%3Afollowers%20channel%3Aread%3Asubscriptions%20user%3Aread%3Aemail`,
             "background-color": "#6b2497"
@@ -80,7 +80,7 @@ function Login(): JSX.Element{
                                     </a>
                                 )
                             }
-                        })}   
+                        })}
                     </div>
                     <div className="text-center">
                         <h5>A personalized Analytics Dasboard is only a click away!</h5>

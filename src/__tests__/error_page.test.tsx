@@ -27,22 +27,27 @@ afterEach(() => {
   cleanup();
 })
 
-test('Test that when you click the "Return Home" button it redirects you to the root page', async () => {
-  render(
-    <Provider store={setupStore()}>
-      <BrowserRouter>
-        <Error/>
-      </BrowserRouter>
-    </Provider>
-  )
+describe("Error Page Tests", () => {
 
-  await waitFor(() => {
-    //Check that our page loads
-    expect(screen.getByText("Oops! Nothing to see here!")).toBeInTheDocument();
-
-    fireEvent.click(screen.getByText('Return Home'))
-
-    expect(mockNavigate).toBeCalledWith("/")
+  test('Test that when you click the "Return Home" button it redirects you to the root page', async () => {
+    render(
+      <Provider store={setupStore()}>
+        <BrowserRouter>
+          <Error/>
+        </BrowserRouter>
+      </Provider>
+    )
+  
+    await waitFor(() => {
+      //Check that our page loads
+      expect(screen.getByText("Oops! Nothing to see here!")).toBeInTheDocument();
+  
+      fireEvent.click(screen.getByText('Return Home'))
+  
+      expect(mockNavigate).toBeCalledWith("/")
+  
+    })
 
   })
+
 })
