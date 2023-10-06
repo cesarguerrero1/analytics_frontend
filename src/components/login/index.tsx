@@ -12,6 +12,10 @@ import { useNavigate} from "react-router-dom"; //Allows us to redirect a users b
 import { loadTwitchOAuthThunk } from "../../thunks/twitch-thunk";
 import { loadTwitterOAuthThunk } from "../../thunks/twitter-thunk";
 
+/**
+ * The Login page shows the buttons for our Oauthflow
+ * @returns JSX.Element
+ */
 function Login(): JSX.Element{
     //Global State Variables
     const {loggedIn} = useAppSelector(state => state.users);
@@ -80,7 +84,7 @@ function Login(): JSX.Element{
                                     </a>
                                 )
                             }else{
-                                return(<></>)
+                                return(<div key={app['name']}></div>)
                             }
                         })}
                     </div>

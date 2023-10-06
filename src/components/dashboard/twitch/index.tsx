@@ -6,6 +6,7 @@
 
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { useNavigate } from "react-router-dom";
 
 //Thunks
 import { logoutThunk } from "../../../thunks/authentication-thunk";
@@ -24,6 +25,7 @@ import VideoLineGraph from "./video_line_graph";
 function TwitchDashboard(): JSX.Element{
 
     const dispatch = useAppDispatch(); 
+    const navigate = useNavigate();
 
     //Global State Variables
     const {twitchUsername, twitchImage, bitsLeaderboardArray, followers, subscribersTierArray,
@@ -31,6 +33,7 @@ function TwitchDashboard(): JSX.Element{
         syncDate, syncTime} = useAppSelector(state => state.twitch);
         
     function logoutClickHandler(): any{
+        navigate('/login');
         dispatch(logoutThunk());
     }
 
@@ -53,7 +56,7 @@ function TwitchDashboard(): JSX.Element{
 
     useEffect(() => {
         collectData();
-    }, [collectData])
+    }, [])
 
 
     return(
@@ -61,7 +64,7 @@ function TwitchDashboard(): JSX.Element{
             <h1 className="text-center cg-dashboard-main-title">{twitchUsername !== "" && `${twitchUsername}'s`} Twitch Dashboard</h1>
             <div className="col-12 col-md-4 col-lg-3 my-4 cg-left-side">
                 <div className="text-center my-4">
-                {
+                    {
                         twitchImage !== null ?
                             <img alt='Default' src={twitchImage} className="cg-dashboard-image"/>
                         :

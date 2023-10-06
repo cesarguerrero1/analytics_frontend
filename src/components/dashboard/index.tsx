@@ -21,15 +21,16 @@ import TwitchDashboard from "./twitch";
  */
 function Dashboard(): JSX.Element{
 
-    const { loggedIn, app } = useAppSelector(state => state.users);
+    const {loggedIn, app} = useAppSelector(state => state.users);
     const navigate = useNavigate();
 
-    useEffect( () => {
+    useEffect(() => {
         //If the user is not logged in, don't allow them to be on this page
         if(loggedIn === false){
-            navigate('/login')
+            navigate("/login")
+            return
         }
-    }, [navigate, loggedIn, app])
+    }, [navigate, loggedIn])
 
     return(
         <div className="container-fluid min-vh-100 min-vh-100 cg-dashboard-body">
