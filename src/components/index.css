@@ -5,72 +5,162 @@
  */
 
 
- /**** Universal CSS ****/
- .cg-button-container{
-    padding: 5% 0%;
- }
- 
- .cg-button.btn{
-    margin: 20px auto;
-    display: block;
-    background-color: #2196f3;
-    border-radius: 10px;
-    width:50%;
- }
- 
- .cg-image{
-    width:20%;
- }
- 
- 
-  /*CSS for Login page*/
- .cg-login-body{
-    padding-top: 50px;
-    padding-bottom: 50px;
-    background-color: #2196f3;
-    background: linear-gradient(135deg, #B72C7B 25%,  #1044A5, #620E5A 75%);
-    background-size: cover;
- }
- 
- .cg-login-box{
-    padding:5% 0%;
-    background-color: #ffffff;
-    border-radius: 25px;
- }
- 
- .cg-login-title{
-    font-weight:bolder;
- }
- 
- 
- /*CSS for Callback Page*/
- .cg-callback-body{
-    color:white;
-    background-color: #2196f3;
-    background: linear-gradient(135deg, #B72C7B 25%,  #1044A5, #620E5A 75%);
-    background-size: cover;
-    padding-top: 50px;
-    padding-bottom: 50px;
- }
- 
- 
- /*CSS for the Error Page*/
- .cg-error-body{
-    padding-top: 50px;
-    padding-bottom: 50px;
-    background-color: #e5e2e2;
- }
- 
- .cg-error-box{
-    padding:15px;
-    background-color: white;
-    border-radius: 10px;
- }
- 
- .cg-colorful-writing{
-    font-size:10rem;
-    background: linear-gradient(to right, #B72C7B 40%,  #1044A5, #620E5A 60%);
-    -webkit-text-fill-color: transparent;
-    -webkit-background-clip: text;
- }
- 
+/**** Universal CSS ****/
+.cg-button.btn {
+   margin: 20px auto;
+   display: block;
+   background-color: #2196f3;
+   border-radius: 10px;
+   width: 75%;
+}
+
+
+
+/*CSS for Login page*/
+.cg-login-body {
+   padding-top: 50px;
+   padding-bottom: 50px;
+   background-color: #2196f3;
+   background: linear-gradient(135deg, #B72C7B 25%, #1044A5, #620E5A 75%);
+   background-size: cover;
+}
+
+.cg-login-container {
+   width: 100%;
+}
+
+.cg-login-box {
+   padding: 5% 0%;
+   background-color: #ffffff;
+   border-radius: 25px;
+}
+
+.cg-login-title {
+   font-weight: bolder;
+}
+
+.cg-button-image {
+   width: 20%;
+}
+
+
+
+/*CSS for Callback Page*/
+.cg-callback-body {
+   color: white;
+   background-color: #2196f3;
+   background: linear-gradient(135deg, #B72C7B 25%, #1044A5, #620E5A 75%);
+   background-size: cover;
+   padding-top: 50px;
+   padding-bottom: 50px;
+}
+
+.cg-callback-container {
+   width: 100%;
+}
+
+
+
+/*CSS for the Dashboard*/
+.cg-dashboard-body {
+   padding-top: 25px;
+   padding-bottom: 25px;
+   background-color: #2196f3;
+   background: linear-gradient(135deg, rgba(183, 44, 123, .75) 25%, rgba(16, 68, 165, .75), rgba(98, 14, 90, .75) 75%);
+   background-size: cover;
+}
+
+.cg-dashboard-row {
+   background-color: white;
+   border-radius: 15px;
+   padding: 25px;
+}
+
+.cg-dashboard-main-title {
+   background: linear-gradient(to right, #B72C7B 40%, #1044A5, #620E5A 60%);
+   -webkit-text-fill-color: transparent;
+   -webkit-background-clip: text;
+}
+
+.cg-left-side {
+   color: black;
+   padding: 10px 0px;
+   background: linear-gradient(135deg, rgb(255, 255, 255) 30%, rgb(235, 235, 235), rgb(255, 255, 255) 70%);
+   border-radius: 10px;
+}
+
+.cg-dashboard-image {
+   border-radius: 100%;
+   width: 200px;
+}
+
+.cg-dashboard-titles {
+   margin: 10px 0px;
+   font-weight: bolder;
+}
+
+.cg-dashboard-metrics {
+   font-weight: bold;
+}
+
+.cg-right-side {
+   color: black;
+}
+
+.cg-graph-elements {
+   margin: 25px 0px;
+   height: 200px;
+}
+
+
+/*CSS for the Error Page*/
+.cg-error-body {
+   padding-top: 50px;
+   padding-bottom: 50px;
+   background-color: #e5e2e2;
+}
+
+.cg-error-container {
+   width: 100%;
+}
+
+.cg-error-box {
+   padding: 15px;
+   background-color: white;
+   border-radius: 10px;
+}
+
+.cg-colorful-writing {
+   font-size: 10rem;
+   background: linear-gradient(to right, #B72C7B 40%, #1044A5, #620E5A 60%);
+   -webkit-text-fill-color: transparent;
+   -webkit-background-clip: text;
+}
+
+
+
+/**BREAKPOINTS FOR NAVIGATION SIZING**/
+@media (min-width: 576px) {}
+
+@media (min-width: 768px) {}
+
+@media (min-width: 992px) {
+   .cg-button.btn {
+      width: 50%;
+   }
+
+   .cg-login-container {
+      width: 75%;
+   }
+
+   .cg-error-container {
+      width: 75%;
+   }
+
+   .cg-callback-container {
+      width: 75%;
+   }
+
+}
+
+@media (min-width: 1200px) {}

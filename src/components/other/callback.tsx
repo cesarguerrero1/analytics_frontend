@@ -7,66 +7,131 @@
 
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../hooks";
-import { useNavigate } from "react-router";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, useParams} from "react-router-dom";
 
 //Thunk Imports
-import { authorizeOAuthThunk } from "../../services/thunks/authentication-thunk";
+import { authorizeTwitterOAuthThunk } from "../../thunks/twitter-thunk";
+import { authorizeTwitchOAuthThunk } from "../../thunks/twitch-thunk";
 
 //Import ENUM
 import {authorizationStatus} from "../../reducers/users-reducer"
 
 
 function Callback(): JSX.Element{
-    //Global State Variables
-    const {authorizationStatusMessage, authorizationApproved} = useAppSelector(state => state.users)
-
-    //Local State Variables
-    let [thunkCalled, setThunkCalled] = useState(false);
-
-    //Query Keys
-    let [searchParams] = useSearchParams();
-    const denied = searchParams.get('denied');
-    const oauthToken = searchParams.get('oauth_token');
-    const oauthVerifier = searchParams.get('oauth_verifier');
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
+    //Global State Variables
+    let {authorizationStatusMessage, authorizationApproved} = useAppSelector(state => state.users)
+
+    //Local State Variables
+    let [thunkCalled, setThunkCalled] = useState(false);
+
+    //Path Keys
+    let {appname} = useParams();
+
+    //We can't access these values as pathnames so we are expecting query paramters
+    let [searchParams] = useSearchParams();
+    //Twitter
+    const denied = searchParams.get('denied');
+    const oauthToken = searchParams.get('oauth_token');
+    const oauthVerifier = searchParams.get('oauth_verifier');
+
+    //Twitch
+    const code = searchParams.get('code');
+    const error = searchParams.get('error');
+
 
     useEffect(() => {
-        //We don't want people on this page if they are logged in or they have authorized our application
+        //If we have approved the authorization token then go to the dashboard
         if(authorizationApproved === authorizationStatus.APPROVED){
             setTimeout(() => {
                 navigate('/dashboard')
             }, 3000)
-            return
-        }
-
-        if(authorizationApproved === authorizationStatus.REJECTED){
+            
+        }else if(authorizationApproved === authorizationStatus.REJECTED){
+            //If we denied authorization OR it was rejected then go to the login page to reset everything and try again
             setTimeout(() => {
                 navigate('/login')
             }, 3000)
+        }else{
+            if(thunkCalled === false){
+                //Attempting to authorize Twitch
+                if(appname === "twitch"){
+
+                    //There is no error query so ping the server
+                    if(error === null){
+                        if(code){
+                            dispatch(authorizeTwitchOAuthThunk(code));
+                            setThunkCalled(true)
+                        }
+                    }else{
+                        setTimeout(() => {
+                            navigate('/login')
+                        }, 3000)
+                    }
+
+                //Attempting to authorize Twitter
+                }else if(appname === "twitter"){
+
+                    //There is no denied query so ping the server
+                    if(denied === null){
+                        if(oauthToken && oauthVerifier){
+                            dispatch(authorizeTwitterOAuthThunk({oauthToken, oauthVerifier}))
+                            setThunkCalled(true)
+                        }
+                    }else{
+                        setTimeout(() => {
+                            navigate('/login')
+                        }, 3000)
+                    }
+                    
+                }else{
+                    navigate('/error')
+                }
+            }
         }
 
-        //We did not find a denied param in the url so attempt to authorize the credentials
-        if(denied === null && thunkCalled === false){
-            if(oauthToken && oauthVerifier){
-                dispatch(authorizeOAuthThunk({oauthToken, oauthVerifier}))
-                setThunkCalled(true)
-            }
-            return
-        }
         
-    }, [dispatch, navigate, thunkCalled, denied, oauthToken, oauthVerifier, authorizationApproved])
+    }, [dispatch, navigate, authorizationApproved])
 
     return(
         <div className="container-fluid min-vh-100 min-vh-100 cg-callback-body">
-            <div className="row w-75 mx-auto justify-content-center align-items-center">
+            <div className="row mx-auto justify-content-center align-items-center cg-callback-container">
                 <div className="col text-center">
-                    {denied === null ? <div><h1>Attempting to authorize your account</h1> <h6>Authorization Status: {authorizationStatusMessage}</h6></div> : 
-                        <div><h5>AUTHORIZATION DENIED</h5><h6>Redirecting you back to the login page momentarily</h6></div>}
-                    {authorizationApproved === authorizationStatus.APPROVED && <div><h5>AUTHORIZATION APPROVED</h5>Redirecting you to the dashboard momentarily</div>}
+                {
+                    appname === "twitter" && 
+                    (denied === null ? 
+                        <div>
+                            <h1>Attempting to authorize your Twitter account</h1>
+                            <h6>Authorization Status: {authorizationStatusMessage}</h6>
+                            {authorizationApproved === authorizationStatus.APPROVED && <p>Redirecting you to the dashboard momentarily</p>}
+                            {authorizationApproved === authorizationStatus.REJECTED && <p>Redirecting you to the login page momentarily</p>}
+                        </div>
+                        : 
+                        <div>
+                            <h5>You have DENIED our authorization attempt</h5>
+                            <h6>Redirecting you back to the login page momentarily</h6>
+                        </div>
+                    )
+                }
+                {
+                    appname === "twitch" && 
+                    (error === null ? 
+                        <div>
+                            <h1>Attempting to authorize your Twitch account</h1>
+                            <h6>Authorization Status: {authorizationStatusMessage}</h6>
+                            {authorizationApproved === authorizationStatus.APPROVED && <p>Redirecting you to the dashboard momentarily</p>}
+                            {authorizationApproved === authorizationStatus.REJECTED && <p>Redirecting you to the login page momentarily</p>}
+                        </div>
+                        : 
+                        <div>
+                            <h5>You have DENIED our authorization attempt</h5>
+                            <h6>Redirecting you back to the login page momentarily</h6>
+                        </div>
+                    )
+                }
                 </div>
             </div>
         </div>

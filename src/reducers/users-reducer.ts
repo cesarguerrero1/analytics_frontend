@@ -8,19 +8,27 @@
 import {createSlice} from "@reduxjs/toolkit";
 
 //Import pertinent Thunks
-import { authorizeOAuthThunk, isLoggedInThunk, loadOAuthThunk, logoutThunk } from "../services/thunks/authentication-thunk";
+import { isLoggedInThunk, logoutThunk } from "../thunks/authentication-thunk";
+import { authorizeTwitchOAuthThunk } from "../thunks/twitch-thunk";
+import { authorizeTwitterOAuthThunk } from "../thunks/twitter-thunk";
 
+//We are using this to ensure our callback page is able to redirect accordingly
 export enum authorizationStatus{
     REJECTED,
     PENDING,
     APPROVED
 }
 
+//Add more apps as needed -- Used for redirecting to the correct dashboard
+export enum selectedApp{
+    TWITTER,
+    TWITCH
+}
+
 //NOTE: Address why we have to define this initial state as type: any... Doesn't make sense
 let sliceState: any = {
-    currentUser: null,
-    oauthReady: false,
-    oauthToken: null,
+    loggedIn: false,
+    app: null,
     authorizationApproved: authorizationStatus.PENDING, //After we redirected the user, did they approve our app
     authorizationStatusMessage: "..."
 }
@@ -33,72 +41,98 @@ const userSlice = createSlice({
 
     //Handle Async Calls
     extraReducers: (builder) => {
+
         //Check if user is logged in
         builder.addCase(isLoggedInThunk.fulfilled, (state,action) => {
             if(action.payload['is_logged_in'] === false){
-                state.currentUser = null;
+                state.loggedIn = false;
+                state.app = null;
+                state.authorizationApproved = authorizationStatus.PENDING
             }else{
-                state.currentUser = action.payload['current_user']
+                state.loggedIn = true;
+                state.authorizationApproved = authorizationStatus.APPROVED
+                if(action.payload['app'] === "Twitch"){
+                    state.app = selectedApp.TWITCH
+                }else if(action.payload['app'] === "Twitter"){
+                    state.app = selectedApp.TWITTER
+                }
+                
             }
         })
 
         builder.addCase(isLoggedInThunk.rejected, (state,action) => {
-            state.currentUser = null
+            state.loggedIn = false
+            state.app = null
+            state.authorizationApproved = authorizationStatus.PENDING
         })
 
 
-
-        //Ensure that the OAuth Flow is ready to go
-        builder.addCase(loadOAuthThunk.fulfilled, (state,action) => {
-            state.oauthReady = action.payload['oauth_ready'];
-            if(state.oauthReady === true){
-                state.oauthToken = action.payload['oauth_token'];
-                state.authorizationApproved = authorizationStatus.PENDING;
-                state.authorizationStatusMessage = 'PENDING';
-            }
-        })
-
-        builder.addCase(loadOAuthThunk.rejected, (state,action) => {
-            state.oauthReady = false;
-            state.oauthToken = null;
-            state.authorizationApproved = authorizationStatus.PENDING;
-            state.authorizationStatusMessage = '...';
-        })
-
-
-
-        //Complete the authorization
-        builder.addCase(authorizeOAuthThunk.fulfilled, (state,action) => {
-            state.authorizationApproved = authorizationStatus.APPROVED ? action.payload['oauth_approved'] === true : authorizationStatus.REJECTED
-            if(state.authorizationApproved === authorizationStatus.APPROVED){
-                state.currentUser = action.payload['current_user']
+        //Complete the authorization for TWITTER
+        builder.addCase(authorizeTwitterOAuthThunk.fulfilled, (state,action) => {
+            if(action.payload['oauth_approved'] === true){
+                state.loggedIn = true
+                state.app = selectedApp.TWITTER
+                state.authorizationApproved = authorizationStatus.APPROVED
                 state.authorizationStatusMessage = 'APPROVED'
             }else{
-                state.currentUser = null
+                state.loggedIn = false
+                state.app = null
+                state.authorizationApproved = authorizationStatus.REJECTED
                 state.authorizationStatusMessage = 'REJECTED'
             }
         })
 
-        builder.addCase(authorizeOAuthThunk.pending, (state,action) => {
-            state.currentUser =  null
+        builder.addCase(authorizeTwitterOAuthThunk.pending, (state,action) => {
+            state.loggedIn = false
+            state.app = null
             state.authorizationApproved = authorizationStatus.PENDING
             state.authorizationStatusMessage = 'PENDING'
         })
 
-        builder.addCase(authorizeOAuthThunk.rejected, (state,action) => {
-            state.currentUser = null
+        builder.addCase(authorizeTwitterOAuthThunk.rejected, (state,action) => {
+            state.loggedIn = false
+            state.app = null
+            state.authorizationApproved = authorizationStatus.REJECTED
+            state.authorizationStatusMessage = 'REJECTED'
+
+        })
+
+
+        //Complete the authorization for TWITCH
+        builder.addCase(authorizeTwitchOAuthThunk.fulfilled, (state,action) => {
+            if(action.payload['oauth_approved'] === true){
+                state.app = selectedApp.TWITCH
+                state.authorizationApproved = authorizationStatus.APPROVED
+                state.loggedIn = true
+                state.authorizationStatusMessage = 'APPROVED'
+            }else{
+                state.loggedIn = false
+                state.app = null
+                state.authorizationApproved = authorizationStatus.REJECTED
+                state.authorizationStatusMessage = 'REJECTED'
+            }
+        })
+
+        builder.addCase(authorizeTwitchOAuthThunk.pending, (state,action) => {
+            state.loggedIn =  false
+            state.app = null
+            state.authorizationApproved = authorizationStatus.PENDING
+            state.authorizationStatusMessage = 'PENDING'
+        })
+
+        builder.addCase(authorizeTwitchOAuthThunk.rejected, (state,action) => {
+            state.loggedIn = false
+            state.app = null
             state.authorizationApproved = authorizationStatus.REJECTED
             state.authorizationStatusMessage = 'REJECTED'
 
         })
         
 
-
         //Log the user out
         builder.addCase(logoutThunk.fulfilled, (state,action) => {
-            state.currentUser = null
-            state.oauthReady = false
-            state.oauthToken = null
+            state.loggedIn = false
+            state.app = null
             state.authorizationApproved = authorizationStatus.PENDING
             state.authorizationStatusMessage = '...'
         })
