@@ -18,7 +18,7 @@ function VideoLineGraph({videoArray}:{videoArray: any}): JSX.Element{
         plugins: {
             title: {
                 display: true,
-                text: 'VOD View Count for Last 10 VODs',
+                text: 'VOD View Count for Last 25 VODs',
             },
             legend: {
                 display: false,
