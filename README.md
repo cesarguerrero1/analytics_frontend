@@ -12,6 +12,8 @@ The purpose of the Analytics website is to shwocase an Oauth1 and Oauth2 workflo
 
 We are using React and React-Chartjs to handle the overall UI and dashboard diagrams.
 
+Website Link: https://resplendent-mousse-173f05.netlify.app/dashboard
+
 
 ## Architecture & Design Ideas
 The architecture and design ideas are as follows:
