@@ -123,10 +123,6 @@ jest.mock("../components/dashboard/twitch/video_line_graph", () => () => {
   return <></>
 })
 
-
-
-
-
 //Before we run anything start our server
 beforeAll(() => {
   server.listen()
@@ -189,6 +185,7 @@ describe("Testing Redirects", () => {
 
     await waitFor(() => {
       expect(mockNavigate).toBeCalledTimes(1);
+      expect(mockNavigate).toBeCalledWith('/login');
     })
 
   })
@@ -207,6 +204,7 @@ describe("Testing Redirects", () => {
 
     await waitFor(() => {
       expect(mockNavigate).toBeCalledTimes(1);
+      expect(mockNavigate).toBeCalledWith('/login');
     })
 
   })
@@ -261,7 +259,6 @@ describe("Testing Twitter Dashboard Page", () => {
   })
 
 })
-
 
 describe("Testing Twitch Dashboard Page", () => {
 

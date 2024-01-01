@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import {MemoryRouter, Routes, Route, BrowserRouter} from 'react-router-dom';
+import { MemoryRouter, Routes, Route, BrowserRouter } from 'react-router-dom';
 import { render, cleanup, screen, waitFor} from '@testing-library/react';
 import { act } from 'react-test-renderer';
 

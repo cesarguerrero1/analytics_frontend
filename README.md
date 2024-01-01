@@ -1,26 +1,38 @@
 # Analytics Website Frontend
 
-The purpose of this frontend is to showcase using React to interact with a Flask backend and display the given information. This particular project is a simple analytics dashboard. After a user 'one-click' signs into our site, the dashboard will display the appropriate metrics for the site they used to sign in. Currently we have Twitter and Twitch but I plan to add TikTok in the future.
 
-Architecture Patterns: MVCS (Model-View-Service-Controller)
 
-## Plan:
-1. As a base I want to make sure that the base website appears on Netlify as is. 
-2. Once that is verified I will then start building out the base file structure and verify that everything still works on Netlify.
-3. Next I will start building out the Login in callback pages as those are the most pertinent pages. The OAuth flow needs a login page and a callback.
-4. I will then start making our website persistent by using Redux to enable a State Store.
-5. With Redux enabled I will then start plumbing the site to the backend and use Redux Thunks to update the store as needed. 
-6. As I work on the above I will be using JEST and Mock Service Worker (MSW) to unit test the applicaiton
-    a. In conunction with the unit tests, I will be using Github Actions to establish a CI/CD pipeline between my application and the Netlify Server where the application is being deployed. 
-7. Once it is clear that the front and backend are talking to each other and we have completed the OAuth flows for both Twitter and Twitch, I will then start building out the dashboard. 
-    a. I will be utilizing React-ChartJS to handle displaying the data payloads appropriately 
-8. The above is the core of the website but in the future I will be adding a "Contact Us" page to allow users to request new features  or report bugs.
 
-## How to install locally
+## Overview
+This repository contains all of the files needed to run teh frontend for the Analytics website that I created.
 
-1. On this repository go to Code > Download ZIP
-2. Unzip the file in your local directory and then change into the unzipped file
-3. From within this directory you want to install all dependencies: npm install
-4. After that all that is left is to start the react server: npm start
-5. Be sure to update your environment variables to match the requirements within the code
-NOTE: In order to test locally, you will also have to use the Ngrok servie to tunnel an https address to your localhost address. This is a necessary step as some APIs (Twitter) will only interact with https addresses. 
+The purpose of the Analytics website is to shwocase an Oauth1 and Oauth2 workflow for Twitter and Twitch, respectively. The user will be able to perform a "single-click" authentication process with their login information from either of those websites. Upon successful login, a dashboard containing metrics pertaining to either Twitter or Twitch for the user will be displayed using appropriate charts and graphs.
+
+We are using React and React-Chartjs to handle the overall UI and dashboard diagrams.
+
+
+## Architecture & Design Ideas
+The architecture and design ideas are as follows:
+1. For this project I decided to use a MVC (Model-View-Controller) Architecture as it allows both the frontend and backend to be modular. If I decide to change the frontend framework, I can leave the backend alone and the website will still work.
+2. I chose to use React as I wanted more experience developing in React and I appreciate its component-based approach to UI development
+3. The frontend is currently being hosted on Netlify for ease of deployment, but it can easily be hosted on Google Cloud/AWS/DigitalOcean/Etc.
+4. Netlify requires the use of Github for continuous deployment, so just like on the backend, I went a step further to establish a CI/CD pipeline using Github Actions. I used Jest to unit test the code both manually and programatically.
+    - Anytime a Pull Request is made on the "main" or "develop" branch, a Github Actions workflow is automatically started and a suite of unit tests are run against the codebase before a merge can occur. Once the PR is approved on the main branch, Netlify automatically deploys the changes on the production server.
+5. To ensure that the website is persistent and that data collected from the API is cached, I used Redux to enable a State Store. Furthermore, I enabled serialization and saving of the state store to prevent loss of cached data on refresh.
+6. Rather than make the charts and graphs from scratch using a statistical library and CSS, I opted to use the React-ChartJS library to handle diagram creation
+7. In order to develop locally and still allow the Oauth flow to work, I used the ngrok service to connect our localhost to the internet via an https tunnel. Twitter specifically requires that the callback uri be an https site, so without ngrok it would be impossible to test from a localhost.
+
+
+## Testing
+All of the tests can be found in the "./src/__tests__" folder and can be run using the "npm test" command. The results of the tests are outputted to the console.
+
+Testing is handled using Jest, and as mentioned before, tests are automatically run by Github Actions when a PR is made to the "develop" or "main" branch. For each unit test I tried to isolate each component as much as I could and mocked all external APIs using Mock Server Worker (MSW) to capture axios calls and return predefined responses. Tests were also performed manually using Postman API as needed.
+
+
+## How to run this program locally
+1. Clone the repository
+2. Install all dependencies from our package.json file: npm install
+3. Download ngrok and create an https tunnel: "ngrok http --domain=ProvidedStaticURL localReactPort"
+4. Verify that you have set the correct value for the following environmental variables:
+    - REACT_APP_BACKEND_BASE_URL
+5. Start the server: npm start

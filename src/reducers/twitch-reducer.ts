@@ -10,6 +10,7 @@ import {createSlice} from "@reduxjs/toolkit";
 import { loadTwitchOAuthThunk, getTwitchUserDataThunk, getTwitchBitsDataThunk,
         getTwitchFollowerDataThunk, getTwitchSubscriberDataThunk,
         getTwitchVideoDataThunk } from "../thunks/twitch-thunk";
+        
 import { logoutThunk } from "../thunks/authentication-thunk";
 
 let sliceState: any = {

@@ -23,7 +23,7 @@ import Error from "./other/error"
 //CSS
 import "./index.css"
 
-//Store
+//Store and PERSISTENT STATE
 import { loadState, saveState } from "../local-storage";
 import { setupStore } from "../store"
 
@@ -34,7 +34,7 @@ store.subscribe(() => {
 })
 
 /**
- * Our entire website layout is defined here -- Notice the use of Bootstrap
+ * Our entire website layout is defined here
  * @returns A JSX Element of the configured routes for our application wrapped inside a redux store
  */
 function Analytics(): JSX.Element{
