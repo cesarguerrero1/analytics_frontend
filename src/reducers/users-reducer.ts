@@ -101,9 +101,9 @@ const userSlice = createSlice({
         //Complete the authorization for TWITCH
         builder.addCase(authorizeTwitchOAuthThunk.fulfilled, (state,action) => {
             if(action.payload['oauth_approved'] === true){
+                state.loggedIn = true
                 state.app = selectedApp.TWITCH
                 state.authorizationApproved = authorizationStatus.APPROVED
-                state.loggedIn = true
                 state.authorizationStatusMessage = 'APPROVED'
             }else{
                 state.loggedIn = false

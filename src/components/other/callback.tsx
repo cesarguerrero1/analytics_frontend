@@ -31,8 +31,9 @@ function Callback(): JSX.Element{
     //Path Keys
     let {appname} = useParams();
 
-    //We can't access these values as pathnames so we are expecting query paramters
+    //We can't access these values as PATHNAMES so we are expecting QUERY PARAMETERS
     let [searchParams] = useSearchParams();
+
     //Twitter
     const denied = searchParams.get('denied');
     const oauthToken = searchParams.get('oauth_token');
@@ -56,6 +57,7 @@ function Callback(): JSX.Element{
                 navigate('/login')
             }, 3000)
         }else{
+            //We need to determine whether or not we need to make a call to the backend
             if(thunkCalled === false){
                 //Attempting to authorize Twitch
                 if(appname === "twitch"){

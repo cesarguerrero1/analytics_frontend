@@ -48,7 +48,7 @@ function TwitterDashboard(): JSX.Element{
             <h4 className="text-center">
                 Unfortunately, due to Twitter's aggressive pricing, we currently cannot show you your tweet data.
                 The user information is REAL and indicates that we have successfully completed the OAuth 1.0 Flow.
-                However, the graph information is NOT REAL, but we included it to showcase what your data would look like.
+                However, the graph information is NOT REAL. We included it to showcase what your data would look like.
             </h4>
             <div className="col-12 col-md-4 col-lg-3 my-4 cg-left-side">
                 <div className="text-center my-4">

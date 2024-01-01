@@ -69,6 +69,7 @@ afterAll(() => {
 describe("Checking login functionality for Login Page", () => {
 
   test('If the user is not logged in we should stay on the page', async () =>{
+
     render(
       <Provider store={setupStore()}>
         <CheckUser/>
@@ -87,6 +88,8 @@ describe("Checking login functionality for Login Page", () => {
   })
 
   test('If the user is logged in to Twitch we should be redirected', async () =>{
+
+    //We are overriding our MSW url callback to handle
     server.use(
       rest.get(`${BASE_URL}/profile`, (request, response, context) => {
         return response(context.json({"app":"Twitch","is_logged_in":true,"status_code":200,"status_message":"OK"}))
@@ -133,7 +136,6 @@ describe("Checking login functionality for Login Page", () => {
     })
 
   })
-
 
 })
 
