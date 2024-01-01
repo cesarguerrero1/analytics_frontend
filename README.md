@@ -1,5 +1,7 @@
 # Analytics Website Frontend
 
+<img width="1722" alt="Twitter_Dashboard" src="https://github.com/cesarguerrero1/analytics_frontend/assets/62967999/37bf113d-b327-4d92-9070-dc55333d1146">
+<img width="1717" alt="Twitch_Dashboard" src="https://github.com/cesarguerrero1/analytics_frontend/assets/62967999/a25a7e0b-135e-4ec9-9549-323e13b18336">
 
 
 
